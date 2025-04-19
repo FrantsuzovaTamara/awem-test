@@ -1,0 +1,26 @@
+{
+  "name": "lk-cookie",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prettify": "prettier . --write",
+    "lint": "eslint ./src",
+    "typecheck": "tsc --project tsconfig.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pixi.js": "8.9.1",
+    "@esotericsoftware/spine-pixi-v8": "4.2.70",
+    "typescript": "5.8.3",
+    "@typescript-eslint/eslint-plugin": "8.30.1",
+    "@typescript-eslint/parser": "8.30.1",
+    "eslint": "9.25.0",
+    "eslint-plugin-prettier": "5.2.6",
+    "eslint-plugin-sort-class-members": "1.21.0",
+    "prettier": "3.5.3"
+  }
+}
