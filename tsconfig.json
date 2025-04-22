@@ -7,17 +7,18 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "lib": ["dom", "es2017"],
-    "module": "esnext",
-    "moduleResolution": "node",
-    "noEmit": true,
+    "module": "ESNext",
+    "outDir": "./dist",
+    "moduleResolution": "Node",
+    "noEmit": false,
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
     "noUncheckedIndexedAccess": true,
-    "target": "esnext",
-    "incremental": true,
+    "target": "ES6",
+    "incremental": true
   },
   "exclude": ["node_modules"],
-  "include": ["src/index.ts" ,"src/app/**/*.ts"]
+  "include": ["src"]
 }
