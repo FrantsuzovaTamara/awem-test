@@ -22,6 +22,21 @@ module.exports = {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.(png|atlas)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'assets/[name][ext]'
+        }
+      },
+      {
+        test: /\.json$/i,
+        resourceQuery: /url/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'assets/[name][ext]'
+        }
+      },
     ],
   },
   plugins: [

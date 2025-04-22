@@ -2,7 +2,7 @@ import {Application} from 'pixi.js'
 import DeviceService from './services/device.service'
 import {injected} from 'brandi'
 import {TOKENS} from './di/di.tokens'
-import {AssetsLoaderService} from './services/assets-loader.service'
+import {AssetsLoaderService} from './services/assets-loader/assets-loader.service'
 import {SceneEntity} from './entities/scene.entity'
 
 export class Game {

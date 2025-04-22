@@ -14,6 +14,6 @@ export type SpineAsset = {
 export type Resource = {
   alias: string
   srcs?: string
-  src?: string[]
+  src?: string
   data?: unknown
 }
