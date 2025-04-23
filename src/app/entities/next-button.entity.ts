@@ -21,15 +21,16 @@ export class NextButtonEntity {
       .lineTo(0, 0)
       .fill(0x007bff)
     this.button.eventMode = 'static'
-    this.button.on('pointertap', () => {
-      console.log('click')
-    })
+    this.button.cursor = 'pointer'
 
-    this.text = new Text('NEXT STAGE', {
-      fontFamily: 'Arial',
-      fontSize: 40,
-      fill: 0xffffff,
-      align: 'center',
+    this.text = new Text({
+      text: 'NEXT STAGE',
+      style: {
+        fontFamily: 'Arial',
+        fontSize: 40,
+        fill: 0xffffff,
+        align: 'center',
+      },
     })
     this.text.x = this.WIDTH / 2
     this.text.y = this.HEIGHT / 2
@@ -42,5 +43,23 @@ export class NextButtonEntity {
 
   public addToContainer(container: Container): void {
     container.addChild(this.container)
+  }
+
+  public setPointerEvents(onClick: () => void): void {
+    this.button.on('pointertap', onClick)
+    this.button.on('pointerover', () => {
+      this.button.tint = 0x0029b3
+    })
+    this.button.on('pointerout', () => {
+      this.button.tint = 'white'
+    })
+  }
+
+  public hide(): void {
+    this.container.alpha = 0
+  }
+
+  public show(): void {
+    this.container.alpha = 1
   }
 }
