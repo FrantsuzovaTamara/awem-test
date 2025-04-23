@@ -20,4 +20,27 @@ export class MapEntity {
   public addToContainer(container: Container): void {
     container.addChild(this.container)
   }
+
+  public scaleChange(duration: number, onStop: () => void): void {
+    const startTime = performance.now()
+    const startScale = this.bg.scale.x
+    const targetScale = startScale === 1 ? 1.5 : 1
+    const scaleDiff = targetScale - startScale
+
+    const frame = (now: number): void => {
+      const elapsed = now - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      const currentScale = startScale + scaleDiff * progress
+
+      this.bg.scale.set(currentScale)
+
+      if (progress < 1) {
+        requestAnimationFrame(frame)
+      } else {
+        onStop()
+      }
+    }
+
+    requestAnimationFrame(frame)
+  }
 }

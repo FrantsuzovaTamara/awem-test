@@ -15,6 +15,7 @@ export class PlayButtonEntity {
     this.button.y = 150
     this.button.x = 35
     this.button.eventMode = 'static'
+    this.button.cursor = 'pointer'
     this.button.on('pointertap', () => this.goToStore())
 
     this.container.addChild(this.button)

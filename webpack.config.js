@@ -6,7 +6,7 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    clean: true, // очищает dist перед сборкой
+    clean: true,
   },
   resolve: {
     extensions: ['.ts', '.js'],
