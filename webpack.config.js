@@ -1,5 +1,5 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: './src/index.ts',
@@ -26,16 +26,16 @@ module.exports = {
         test: /\.(png|atlas)$/i,
         type: 'asset/resource',
         generator: {
-          filename: 'assets/[name][ext]'
-        }
+          filename: 'assets/[name][ext]',
+        },
       },
       {
         test: /\.json$/i,
         resourceQuery: /url/,
         type: 'asset/resource',
         generator: {
-          filename: 'assets/[name][ext]'
-        }
+          filename: 'assets/[name][ext]',
+        },
       },
     ],
   },
@@ -51,4 +51,4 @@ module.exports = {
     hot: true,
   },
   mode: 'development',
-};
+}

@@ -1,5 +1,5 @@
 import {createDiRootContainer} from './app/di/di.root-container'
-import { TOKENS } from './app/di/di.tokens'
+import {TOKENS} from './app/di/di.tokens'
 import './global.css'
 
 async function startApp($root: HTMLElement): Promise<void> {
@@ -12,4 +12,6 @@ async function startApp($root: HTMLElement): Promise<void> {
 const appEl = document.getElementById('app')
 if (!appEl) throw new Error(`appEl="#app" not found`)
 
-startApp(appEl).then(() => console.debug('[🏁] Finish')).catch(error => console.error(error))
+startApp(appEl)
+  .then(() => console.debug('[🏁] Finish'))
+  .catch(error => console.error(error))

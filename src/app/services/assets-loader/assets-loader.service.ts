@@ -10,6 +10,7 @@ import greenChip from '../../../assets/chip/ch_green.png'
 import pinkChip from '../../../assets/chip/ch_pink.png'
 import redChip from '../../../assets/chip/ch_red.png'
 import yellowChip from '../../../assets/chip/ch_yellow.png'
+
 import fireworks00 from '../../../assets/fireworks/fireworks_00000.png'
 import fireworks01 from '../../../assets/fireworks/fireworks_00001.png'
 import fireworks02 from '../../../assets/fireworks/fireworks_00002.png'
@@ -72,117 +73,108 @@ import logo from '../../../assets/logo.png'
 import map from '../../../assets/map.png'
 import playButton from '../../../assets/bt_play.png'
 
-
-
 export class AssetsLoaderService {
-  private readonly assets: AssetsObject = this.getAssetsObject()
+  public readonly assets: AssetsObject = this.getAssetsObject()
 
   constructor() {}
 
   public async loadAssets(): Promise<void> {
-    this.loadSpine(this.assets.spine)
-    this.loadImages(this.assets.image)
+    await this.loadSpine(this.assets.spine)
+    await this.loadImages(this.assets.image)
   }
-
 
   private async loadSpine(assets: SpineAsset[]): Promise<void> {
     for (const asset of assets) {
-      if (asset.image.srcs) {
-        const image = await Assets.load(asset.image.srcs)
-        asset.atlas.data = {images: image.source}
-      }
+      const image = await Assets.load(asset.image)
+      asset.atlas.data = {images: image.source}
 
-      Assets.add(asset.atlas)
-      Assets.add(asset.json)
-
-      if (asset.atlas.src) await Assets.load(asset.atlas.src)
-      console.log(asset.json.src)
-      if (asset.json.src) await Assets.load(asset.json.src)
+      await Assets.load(asset.atlas)
+      await Assets.load(asset.json)
     }
   }
 
   private async loadImages(assets: Resource[]): Promise<void> {
-    for (const asset of assets) {
-      if (asset.srcs) await Assets.load(asset.srcs)
-    }
+    await Assets.load(assets)
   }
 
   private getAssetsObject(): AssetsObject {
     return {
-      spine: [{
-        image: {alias: 'builderScrollImage', srcs: builderScrollImage},
-        atlas: {alias: 'builderScrollAtlas', src: builderScrollAtlas},
-        json: {alias: 'builderScrollData', src: builderScrollJson},
-      }],
+      spine: [
+        {
+          image: {alias: 'builderScrollImage', src: builderScrollImage},
+          atlas: {alias: 'builderScrollAtlas', src: builderScrollAtlas},
+          json: {alias: 'builderScrollData', src: builderScrollJson},
+        },
+      ],
       image: [
-        {alias: 'blueChip', srcs: blueChip},
-        {alias: 'greenChip', srcs: greenChip},
-        {alias: 'pinkChip', srcs: pinkChip},
-        {alias: 'redChip', srcs: redChip},
-        {alias: 'yellowChip', srcs: yellowChip},
+        {alias: 'blueChip', src: blueChip},
+        {alias: 'greenChip', src: greenChip},
+        {alias: 'pinkChip', src: pinkChip},
+        {alias: 'redChip', src: redChip},
+        {alias: 'yellowChip', src: yellowChip},
 
-        {alias: 'fireworks00', srcs: fireworks00},
-        {alias: 'fireworks01', srcs: fireworks01},
-        {alias: 'fireworks02', srcs: fireworks02},
-        {alias: 'fireworks03', srcs: fireworks03},
-        {alias: 'fireworks04', srcs: fireworks04},
-        {alias: 'fireworks05', srcs: fireworks05},
-        {alias: 'fireworks06', srcs: fireworks06},
-        {alias: 'fireworks07', srcs: fireworks07},
-        {alias: 'fireworks08', srcs: fireworks08},
-        {alias: 'fireworks09', srcs: fireworks09},
-        {alias: 'fireworks10', srcs: fireworks10},
-        {alias: 'fireworks11', srcs: fireworks11},
-        {alias: 'fireworks12', srcs: fireworks12},
-        {alias: 'fireworks13', srcs: fireworks13},
-        {alias: 'fireworks14', srcs: fireworks14},
-        {alias: 'fireworks15', srcs: fireworks15},
-        {alias: 'fireworks16', srcs: fireworks16},
-        {alias: 'fireworks17', srcs: fireworks17},
-        {alias: 'fireworks18', srcs: fireworks18},
-        {alias: 'fireworks19', srcs: fireworks19},
-        {alias: 'fireworks20', srcs: fireworks20},
-        {alias: 'fireworks21', srcs: fireworks21},
-        {alias: 'fireworks22', srcs: fireworks22},
-        {alias: 'fireworks23', srcs: fireworks23},
-        {alias: 'fireworks24', srcs: fireworks24},
-        {alias: 'fireworks25', srcs: fireworks25},
-        {alias: 'fireworks26', srcs: fireworks26},
-        {alias: 'fireworks27', srcs: fireworks27},
-        {alias: 'fireworks28', srcs: fireworks28},
-        {alias: 'fireworks29', srcs: fireworks29},
+        {alias: 'fireworks00', src: fireworks00},
+        {alias: 'fireworks01', src: fireworks01},
+        {alias: 'fireworks02', src: fireworks02},
+        {alias: 'fireworks03', src: fireworks03},
+        {alias: 'fireworks04', src: fireworks04},
+        {alias: 'fireworks05', src: fireworks05},
+        {alias: 'fireworks06', src: fireworks06},
+        {alias: 'fireworks07', src: fireworks07},
+        {alias: 'fireworks08', src: fireworks08},
+        {alias: 'fireworks09', src: fireworks09},
+        {alias: 'fireworks10', src: fireworks10},
+        {alias: 'fireworks11', src: fireworks11},
+        {alias: 'fireworks12', src: fireworks12},
+        {alias: 'fireworks13', src: fireworks13},
+        {alias: 'fireworks14', src: fireworks14},
+        {alias: 'fireworks15', src: fireworks15},
+        {alias: 'fireworks16', src: fireworks16},
+        {alias: 'fireworks17', src: fireworks17},
+        {alias: 'fireworks18', src: fireworks18},
+        {alias: 'fireworks19', src: fireworks19},
+        {alias: 'fireworks20', src: fireworks20},
+        {alias: 'fireworks21', src: fireworks21},
+        {alias: 'fireworks22', src: fireworks22},
+        {alias: 'fireworks23', src: fireworks23},
+        {alias: 'fireworks24', src: fireworks24},
+        {alias: 'fireworks25', src: fireworks25},
+        {alias: 'fireworks26', src: fireworks26},
+        {alias: 'fireworks27', src: fireworks27},
+        {alias: 'fireworks28', src: fireworks28},
+        {alias: 'fireworks29', src: fireworks29},
 
-        {alias: 'whiteHand00', srcs: whiteHand00},
-        {alias: 'whiteHand01', srcs: whiteHand01},
-        {alias: 'whiteHand02', srcs: whiteHand02},
-        {alias: 'whiteHand03', srcs: whiteHand03},
-        {alias: 'whiteHand04', srcs: whiteHand04},
-        {alias: 'whiteHand05', srcs: whiteHand05},
-        {alias: 'whiteHand06', srcs: whiteHand06},
-        {alias: 'whiteHand07', srcs: whiteHand07},
-        {alias: 'whiteHand08', srcs: whiteHand08},
-        {alias: 'whiteHand09', srcs: whiteHand09},
-        {alias: 'whiteHand10', srcs: whiteHand10},
-        {alias: 'whiteHand11', srcs: whiteHand11},
-        {alias: 'whiteHand12', srcs: whiteHand12},
-        {alias: 'whiteHand13', srcs: whiteHand13},
-        {alias: 'whiteHand14', srcs: whiteHand14},
-        {alias: 'whiteHand15', srcs: whiteHand15},
-        {alias: 'whiteHand16', srcs: whiteHand16},
-        {alias: 'whiteHand17', srcs: whiteHand17},
-        {alias: 'whiteHand18', srcs: whiteHand18},
-        {alias: 'whiteHand19', srcs: whiteHand19},
-        {alias: 'whiteHand20', srcs: whiteHand20},
-        {alias: 'whiteHand21', srcs: whiteHand21},
-        {alias: 'whiteHand22', srcs: whiteHand22},
-        {alias: 'whiteHand23', srcs: whiteHand23},
-        {alias: 'whiteHand24', srcs: whiteHand24},
+        {alias: 'whiteHand00', src: whiteHand00},
+        {alias: 'whiteHand01', src: whiteHand01},
+        {alias: 'whiteHand02', src: whiteHand02},
+        {alias: 'whiteHand03', src: whiteHand03},
+        {alias: 'whiteHand04', src: whiteHand04},
+        {alias: 'whiteHand05', src: whiteHand05},
+        {alias: 'whiteHand06', src: whiteHand06},
+        {alias: 'whiteHand07', src: whiteHand07},
+        {alias: 'whiteHand08', src: whiteHand08},
+        {alias: 'whiteHand09', src: whiteHand09},
+        {alias: 'whiteHand10', src: whiteHand10},
+        {alias: 'whiteHand11', src: whiteHand11},
+        {alias: 'whiteHand12', src: whiteHand12},
+        {alias: 'whiteHand13', src: whiteHand13},
+        {alias: 'whiteHand14', src: whiteHand14},
+        {alias: 'whiteHand15', src: whiteHand15},
+        {alias: 'whiteHand16', src: whiteHand16},
+        {alias: 'whiteHand17', src: whiteHand17},
+        {alias: 'whiteHand18', src: whiteHand18},
+        {alias: 'whiteHand19', src: whiteHand19},
+        {alias: 'whiteHand20', src: whiteHand20},
+        {alias: 'whiteHand21', src: whiteHand21},
+        {alias: 'whiteHand22', src: whiteHand22},
+        {alias: 'whiteHand23', src: whiteHand23},
+        {alias: 'whiteHand24', src: whiteHand24},
 
-        {alias: 'field', srcs: field},
-        {alias: 'logo', srcs: logo},
-        {alias: 'map', srcs: map},
-        {alias: 'playButton', srcs: playButton},
-      ]
+        {alias: 'field', src: field},
+        {alias: 'logo', src: logo},
+        {alias: 'map', src: map},
+        {alias: 'playButton', src: playButton},
+      ],
     }
   }
 }
