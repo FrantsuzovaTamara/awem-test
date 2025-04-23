@@ -9,8 +9,8 @@ import {FieldEntity} from '../entities/field.entity'
 import {LogoEntity} from '../entities/logo.entity'
 import {NextButtonEntity} from '../entities/next-button.entity'
 import {PlayButtonEntity} from '../entities/play-button.entity'
-import { BuilderEntity } from '../entities/builder.entity'
-import { FireworkEntity } from '../entities/firework.entity'
+import {BuilderEntity} from '../entities/builder.entity'
+import {FireworkEntity} from '../entities/firework.entity'
 
 export const TOKENS = {
   game: token<Game>('game'),

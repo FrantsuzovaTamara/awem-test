@@ -12,7 +12,7 @@ export class Game {
     private readonly $root: HTMLElement,
     private readonly deviceService: DeviceService,
     private readonly assetsLoaderService: AssetsLoaderService,
-    private readonly createAppScene: () => SceneEntity,
+    private readonly createScene: () => SceneEntity,
   ) {
     this.app = new Application()
   }
@@ -23,10 +23,17 @@ export class Game {
       resolution: this.deviceService.getDevicePixelRatio(),
       autoDensity: true,
       background: 0x000000,
+      width: this.deviceService.getWindowWidth(),
+      height: this.deviceService.getWindowHeight(),
     })
+    //@ts-ignore
+    globalThis.__PIXI_APP__ = this.app
     this.$root.appendChild(this.app.canvas)
-    await this.assetsLoaderService.loadAssets()
-    this.createAppScene()
+
+    await this.assetsLoaderService.loadAssets().then(() => {
+      const scene = this.createScene()
+      this.app.stage.addChild(scene.container)
+    })
   }
 }
 

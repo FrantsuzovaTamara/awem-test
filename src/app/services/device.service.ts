@@ -1,5 +1,3 @@
-import {Position} from '../types'
-
 export class DeviceService {
   public readonly WINDOW_MAX_WIDTH: number = 1400
   public readonly WINDOW_MAX_HEIGHT: number = 1400
