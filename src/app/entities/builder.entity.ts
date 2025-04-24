@@ -1,5 +1,5 @@
-import {AtlasAttachmentLoader, SkeletonJson, Spine} from '@esotericsoftware/spine-pixi-v8'
-import {Assets, Container} from 'pixi.js'
+import {Spine} from '@esotericsoftware/spine-pixi-v8'
+import {Container} from 'pixi.js'
 
 export class BuilderEntity {
   private readonly builder: Spine

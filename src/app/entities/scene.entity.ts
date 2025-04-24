@@ -7,6 +7,7 @@ import {PlayButtonEntity} from './play-button.entity'
 import {NextButtonEntity} from './next-button.entity'
 import {FieldEntity} from './field.entity'
 import {BuilderEntity} from './builder.entity'
+import {FireworkEntity} from './firework.entity'
 
 export class SceneEntity {
   private readonly DURATION: number = 800
@@ -18,6 +19,7 @@ export class SceneEntity {
   private readonly nextButton: NextButtonEntity
   private readonly field: FieldEntity
   private readonly builder: BuilderEntity
+  private readonly fireworks: FireworkEntity
 
   private stage: 'initial' | 'field' | 'builder' | 'fireworks' = 'initial'
 
@@ -28,6 +30,7 @@ export class SceneEntity {
     private readonly createNextButton: () => NextButtonEntity,
     private readonly createField: () => FieldEntity,
     private readonly createBuilder: () => BuilderEntity,
+    private readonly createFireworks: () => FireworkEntity,
   ) {
     this.container = new Container()
     this.map = this.createMap()
@@ -48,6 +51,9 @@ export class SceneEntity {
 
     this.builder = this.createBuilder()
     this.builder.addToContainer(this.container)
+
+    this.fireworks = this.createFireworks()
+    this.fireworks.addToContainer(this.container)
   }
 
   private readonly onNextButtonClick = (): void => {
@@ -66,7 +72,7 @@ export class SceneEntity {
         this.stage = 'fireworks'
         break
       case 'fireworks':
-        this.startFireworks()
+        this.fireworks.startFireworks(() => this.nextButton.show())
         break
       default:
         throw new Error('Stage not found')
@@ -85,12 +91,8 @@ export class SceneEntity {
   }
 
   private startStageWithFireworks(): void {
-    this.map.scaleChange(this.DURATION, () => this.nextButton.show())
-    this.startFireworks()
-  }
-
-  private startFireworks(): void {
-    this.nextButton.show()
+    this.map.scaleChange(this.DURATION, () => {})
+    this.fireworks.startFireworks(() => this.nextButton.show())
   }
 }
 
@@ -102,4 +104,5 @@ injected(
   TOKENS.nextButtonFactory,
   TOKENS.fieldFactory,
   TOKENS.builderFactory,
+  TOKENS.fireworkFactory,
 )
