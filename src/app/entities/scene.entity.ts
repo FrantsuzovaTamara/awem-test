@@ -6,6 +6,7 @@ import {LogoEntity} from './logo.entity'
 import {PlayButtonEntity} from './play-button.entity'
 import {NextButtonEntity} from './next-button.entity'
 import {FieldEntity} from './field.entity'
+import {BuilderEntity} from './builder.entity'
 
 export class SceneEntity {
   private readonly DURATION: number = 800
@@ -16,6 +17,7 @@ export class SceneEntity {
   private readonly playButton: PlayButtonEntity
   private readonly nextButton: NextButtonEntity
   private readonly field: FieldEntity
+  private readonly builder: BuilderEntity
 
   private stage: 'initial' | 'field' | 'builder' | 'fireworks' = 'initial'
 
@@ -25,6 +27,7 @@ export class SceneEntity {
     private readonly createPlayButton: () => PlayButtonEntity,
     private readonly createNextButton: () => NextButtonEntity,
     private readonly createField: () => FieldEntity,
+    private readonly createBuilder: () => BuilderEntity,
   ) {
     this.container = new Container()
     this.map = this.createMap()
@@ -42,6 +45,9 @@ export class SceneEntity {
 
     this.field = this.createField()
     this.field.addToContainer(this.container)
+
+    this.builder = this.createBuilder()
+    this.builder.addToContainer(this.container)
   }
 
   private readonly onNextButtonClick = (): void => {
@@ -70,23 +76,21 @@ export class SceneEntity {
   private startStageWithField(): void {
     this.map.scaleChange(this.DURATION, () => this.nextButton.show())
     this.field.alphaChange(this.DURATION)
-    console.log('field')
   }
 
   private startStageWithBuilder(): void {
-    console.log('builder')
+    this.builder.show()
     this.field.hide()
-    this.nextButton.show()
+    setTimeout(() => this.nextButton.show(), this.DURATION)
   }
 
   private startStageWithFireworks(): void {
     this.map.scaleChange(this.DURATION, () => this.nextButton.show())
-    console.log('fireworks')
+    this.startFireworks()
   }
 
   private startFireworks(): void {
     this.nextButton.show()
-    console.log('start fireworks')
   }
 }
 
@@ -97,4 +101,5 @@ injected(
   TOKENS.playButtonFactory,
   TOKENS.nextButtonFactory,
   TOKENS.fieldFactory,
+  TOKENS.builderFactory,
 )
