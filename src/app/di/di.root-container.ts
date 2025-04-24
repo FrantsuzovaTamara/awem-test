@@ -12,6 +12,7 @@ import {FieldEntity} from '../entities/field.entity'
 import {ChipEntity} from '../entities/chip.entity'
 import {BuilderEntity} from '../entities/builder.entity'
 import {FireworkEntity} from '../entities/firework.entity'
+import {HintEntity} from '../entities/hint.entity'
 
 export function createDiRootContainer($root: HTMLElement): Container {
   const container = new Container()
@@ -33,6 +34,7 @@ export function createDiRootContainer($root: HTMLElement): Container {
 
   container.bind(TOKENS.builderFactory).toFactory(BuilderEntity)
   container.bind(TOKENS.fireworkFactory).toFactory(FireworkEntity)
+  container.bind(TOKENS.hintFactory).toFactory(HintEntity)
 
   return container
 }
