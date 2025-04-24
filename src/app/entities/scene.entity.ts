@@ -8,9 +8,11 @@ import {NextButtonEntity} from './next-button.entity'
 import {FieldEntity} from './field.entity'
 import {BuilderEntity} from './builder.entity'
 import {FireworkEntity} from './firework.entity'
+import {HintEntity} from './hint.entity'
 
 export class SceneEntity {
   private readonly DURATION: number = 800
+  private readonly IDLE_TIME = 3000
 
   public readonly container: Container
   private readonly map: MapEntity
@@ -20,8 +22,10 @@ export class SceneEntity {
   private readonly field: FieldEntity
   private readonly builder: BuilderEntity
   private readonly fireworks: FireworkEntity
+  private readonly hint: HintEntity
 
   private stage: 'initial' | 'field' | 'builder' | 'fireworks' = 'initial'
+  private idleTimeoutId: ReturnType<typeof setTimeout> | null = null
 
   constructor(
     private readonly createMap: () => MapEntity,
@@ -31,8 +35,14 @@ export class SceneEntity {
     private readonly createField: () => FieldEntity,
     private readonly createBuilder: () => BuilderEntity,
     private readonly createFireworks: () => FireworkEntity,
+    private readonly createHint: () => HintEntity,
   ) {
+    this.resetIdleTimer()
+    window.onpointerdown = () => this.onUserInteraction()
+    window.onpointermove = () => this.onUserInteraction()
+
     this.container = new Container()
+
     this.map = this.createMap()
     this.map.addToContainer(this.container)
 
@@ -54,6 +64,9 @@ export class SceneEntity {
 
     this.fireworks = this.createFireworks()
     this.fireworks.addToContainer(this.container)
+
+    this.hint = this.createHint()
+    this.hint.addToContainer(this.container)
   }
 
   private readonly onNextButtonClick = (): void => {
@@ -94,6 +107,16 @@ export class SceneEntity {
     this.map.scaleChange(this.DURATION, () => {})
     this.fireworks.startFireworks(() => this.nextButton.show())
   }
+
+  private onUserInteraction(): void {
+    this.hint.stopHintAnimation()
+    this.resetIdleTimer()
+  }
+
+  private resetIdleTimer(): void {
+    if (this.idleTimeoutId) clearTimeout(this.idleTimeoutId)
+    this.idleTimeoutId = setTimeout(() => this.hint.startHintAnimation(), this.IDLE_TIME)
+  }
 }
 
 injected(
@@ -105,4 +128,5 @@ injected(
   TOKENS.fieldFactory,
   TOKENS.builderFactory,
   TOKENS.fireworkFactory,
+  TOKENS.hintFactory,
 )
