@@ -1,4 +1,5 @@
 import {Container, Graphics, Text} from 'pixi.js'
+import click from '../../assets/sound/click.mp3'
 
 export class NextButtonEntity {
   private readonly WIDTH: number = 350
@@ -8,6 +9,7 @@ export class NextButtonEntity {
   private readonly container: Container
   private readonly button: Graphics
   private readonly text: Text
+  private readonly sound: HTMLAudioElement
 
   constructor() {
     this.container = new Container()
@@ -39,6 +41,10 @@ export class NextButtonEntity {
     this.container.addChild(this.button, this.text)
     this.container.x = window.innerWidth - this.WIDTH - this.ARROW_SIZE - 20
     this.container.y = window.innerHeight - this.HEIGHT - 50
+
+    this.sound = new Audio(click)
+    this.sound.volume = 0.5
+    this.sound.loop = false
   }
 
   public addToContainer(container: Container): void {
@@ -46,7 +52,10 @@ export class NextButtonEntity {
   }
 
   public setPointerEvents(onClick: () => void): void {
-    this.button.on('pointertap', onClick)
+    this.button.on('pointertap', () => {
+      this.sound.play()
+      onClick()
+    })
     this.button.on('pointerover', () => {
       this.button.tint = 0x0029b3
     })

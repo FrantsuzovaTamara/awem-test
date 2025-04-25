@@ -3,6 +3,7 @@ import {ChipEntity} from './chip.entity'
 import {injected} from 'brandi'
 import {TOKENS} from '../di/di.tokens'
 import {Position} from '../types'
+import mistake from '../../assets/sound/mistake.mp3'
 
 export class FieldEntity {
   private readonly chipTypes = [
@@ -20,6 +21,7 @@ export class FieldEntity {
   private readonly field: Sprite
   private readonly chipsContainer: Container
   private readonly chips: ChipEntity[] = []
+  private readonly sound: HTMLAudioElement
 
   constructor(private readonly createChip: () => ChipEntity) {
     this.container = new Container()
@@ -48,6 +50,10 @@ export class FieldEntity {
     })
     this.chipsContainer.alpha = 0
     this.container.addChild(this.chipsContainer)
+
+    this.sound = new Audio(mistake)
+    this.sound.volume = 0.5
+    this.sound.loop = false
   }
 
   public addToContainer(container: Container): void {
