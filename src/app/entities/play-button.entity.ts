@@ -1,10 +1,12 @@
 import {Assets, Container, Sprite} from 'pixi.js'
+import click from '../../assets/sound/click.mp3'
 
 export class PlayButtonEntity {
   private readonly IOS_URL = 'https://apps.apple.com/us/app/cradle-of-empires-match-3-game/id738480930'
   private readonly ANDROID_URL = 'https://play.google.com/store/apps/details?id=com.awem.cradleofempires.andr&hl=en'
   private readonly container: Container
   private readonly button: Sprite
+  private readonly sound: HTMLAudioElement
 
   constructor() {
     this.container = new Container()
@@ -18,6 +20,10 @@ export class PlayButtonEntity {
     this.button.cursor = 'pointer'
     this.button.on('pointertap', () => this.goToStore())
 
+    this.sound = new Audio(click)
+    this.sound.volume = 0.5
+    this.sound.loop = false
+
     this.container.addChild(this.button)
   }
 
@@ -26,6 +32,7 @@ export class PlayButtonEntity {
   }
 
   private goToStore(): void {
+    this.sound.play()
     const userAgent = navigator.userAgent || navigator.vendor
 
     if (/android/i.test(userAgent)) {

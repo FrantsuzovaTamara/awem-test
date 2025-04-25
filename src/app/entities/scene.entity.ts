@@ -9,6 +9,8 @@ import {FieldEntity} from './field.entity'
 import {BuilderEntity} from './builder.entity'
 import {FireworkEntity} from './firework.entity'
 import {HintEntity} from './hint.entity'
+import music from '../../assets/sound/music.mp3'
+import ovation from '../../assets/sound/ovation.mp3'
 
 export class SceneEntity {
   private readonly DURATION: number = 800
@@ -23,6 +25,8 @@ export class SceneEntity {
   private readonly builder: BuilderEntity
   private readonly fireworks: FireworkEntity
   private readonly hint: HintEntity
+  private readonly bgMusic: HTMLAudioElement
+  private readonly ovationSound: HTMLAudioElement
 
   private stage: 'initial' | 'field' | 'builder' | 'fireworks' = 'initial'
   private idleTimeoutId: ReturnType<typeof setTimeout> | null = null
@@ -67,6 +71,14 @@ export class SceneEntity {
 
     this.hint = this.createHint()
     this.hint.addToContainer(this.container)
+
+    this.bgMusic = new Audio(music)
+    this.bgMusic.volume = 0.3
+    this.bgMusic.loop = true
+
+    this.ovationSound = new Audio(ovation)
+    this.ovationSound.volume = 0.5
+    this.ovationSound.loop = false
   }
 
   private readonly onNextButtonClick = (): void => {
@@ -93,11 +105,13 @@ export class SceneEntity {
   }
 
   private startStageWithField(): void {
+    this.bgMusic.play()
     this.map.scaleChange(this.DURATION, () => this.nextButton.show())
     this.field.alphaChange(this.DURATION)
   }
 
   private startStageWithBuilder(): void {
+    this.ovationSound.play()
     this.builder.show()
     this.field.hide()
     setTimeout(() => this.nextButton.show(), this.DURATION)

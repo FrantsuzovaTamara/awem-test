@@ -1,5 +1,6 @@
 import {AnimatedSprite, Assets, Container, Texture, TextureSource} from 'pixi.js'
 import {Position} from '../types'
+import salut from '../../assets/sound/salut.mp3'
 
 export class FireworkEntity {
   private readonly MAX_NUMBER_OF_FIREWORKS = 5
@@ -27,6 +28,11 @@ export class FireworkEntity {
   public startFireworks(onStop: () => void): void {
     const frame = (): void => {
       const firework = this.createFirework()
+
+      const salutSound = new Audio(salut)
+      salutSound.volume = 0.5
+      salutSound.loop = false
+
       firework.onComplete = () => {
         if (this.currentNumberOfFireworks < this.MAX_NUMBER_OF_FIREWORKS) {
           requestAnimationFrame(frame)
@@ -38,6 +44,7 @@ export class FireworkEntity {
         firework.destroy()
       }
       firework.play()
+      salutSound.play()
     }
 
     requestAnimationFrame(frame)

@@ -1,8 +1,10 @@
 import {Assets, Container, Sprite} from 'pixi.js'
+import camera from '../../assets/sound/camera.mp3'
 
 export class MapEntity {
   private readonly container: Container
   private readonly bg: Sprite
+  private readonly sound: HTMLAudioElement
 
   constructor() {
     this.container = new Container()
@@ -14,6 +16,10 @@ export class MapEntity {
     this.bg.y = window.innerHeight / 2
     this.bg.x = window.innerWidth / 2
 
+    this.sound = new Audio(camera)
+    this.sound.volume = 0.8
+    this.sound.loop = false
+
     this.container.addChild(this.bg)
   }
 
@@ -22,6 +28,7 @@ export class MapEntity {
   }
 
   public scaleChange(duration: number, onStop: () => void): void {
+    this.sound.play()
     const startTime = performance.now()
     const startScale = this.bg.scale.x
     const targetScale = startScale === 1 ? 1.5 : 1
