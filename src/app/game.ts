@@ -30,10 +30,15 @@ export class Game {
     globalThis.__PIXI_APP__ = this.app
     this.$root.appendChild(this.app.canvas)
 
-    await this.assetsLoaderService.loadAssets().then(() => {
-      const scene = this.createScene()
-      this.app.stage.addChild(scene.container)
-    })
+    await this.assetsLoaderService
+      .loadAssets()
+      .then(() => {
+        const scene = this.createScene()
+        this.app.stage.addChild(scene.container)
+      })
+      .then(() => {
+        window.playableLoaded()
+      })
   }
 }
 

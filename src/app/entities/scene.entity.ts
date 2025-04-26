@@ -84,6 +84,7 @@ export class SceneEntity {
 
   private readonly onNextButtonClick = (): void => {
     this.nextButton.hide()
+    if (this.idleTimeoutId) clearTimeout(this.idleTimeoutId)
     switch (this.stage) {
       case 'initial':
         this.startStageWithField()
@@ -96,9 +97,13 @@ export class SceneEntity {
       case 'builder':
         this.startStageWithFireworks()
         this.stage = 'fireworks'
+        window.playableFinished()
         break
       case 'fireworks':
-        this.fireworks.startFireworks(() => this.nextButton.show())
+        this.fireworks.startFireworks(() => {
+          this.nextButton.show()
+          this.resetIdleTimer()
+        })
         break
       default:
         throw new Error('Stage not found')
@@ -110,7 +115,10 @@ export class SceneEntity {
     document.addEventListener('visibilitychange', () => {
       document.hidden ? this.bgMusic.pause() : this.bgMusic.play()
     })
-    this.map.scaleChange(this.DURATION, () => this.nextButton.show())
+    this.map.scaleChange(this.DURATION, () => {
+      this.nextButton.show()
+      this.resetIdleTimer()
+    })
     this.field.alphaChange(this.DURATION)
   }
 
@@ -118,12 +126,18 @@ export class SceneEntity {
     this.ovationSound.play()
     this.builder.show()
     this.field.hide()
-    setTimeout(() => this.nextButton.show(), this.DURATION)
+    setTimeout(() => {
+      this.nextButton.show()
+      this.resetIdleTimer()
+    }, this.DURATION)
   }
 
   private startStageWithFireworks(): void {
     this.map.scaleChange(this.DURATION, () => {})
-    this.fireworks.startFireworks(() => this.nextButton.show())
+    this.fireworks.startFireworks(() => {
+      this.nextButton.show()
+      this.resetIdleTimer()
+    })
   }
 
   private onUserInteraction(): void {
