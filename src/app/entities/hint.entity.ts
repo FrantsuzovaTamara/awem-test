@@ -20,11 +20,19 @@ export class HintEntity {
 
     this.hint.x = window.innerWidth / 2
     this.hint.y = window.innerHeight / 2
-    this.hint.scale = 1
+    this.hint.loop = false
+    this.hint.scale = 0.7
     this.hint.alpha = 0
     this.hint.animationSpeed = 0.8
 
     this.container.addChild(this.hint)
+  }
+
+  public setOnCompleteAnimation(onStop: () => void): void {
+    this.hint.onComplete = (): void => {
+      this.stopHintAnimation()
+      onStop()
+    }
   }
 
   public addToContainer(container: Container): void {
@@ -37,7 +45,7 @@ export class HintEntity {
   }
 
   public stopHintAnimation(): void {
-    this.hint.stop()
+    this.hint.currentFrame = 0
     this.hint.alpha = 0
   }
 }
