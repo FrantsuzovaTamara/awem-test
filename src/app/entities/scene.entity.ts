@@ -71,6 +71,7 @@ export class SceneEntity {
 
     this.hint = this.createHint()
     this.hint.addToContainer(this.container)
+    this.hint.setOnCompleteAnimation(() => this.resetIdleTimer())
 
     this.bgMusic = new Audio(music)
     this.bgMusic.volume = 0.3
@@ -132,7 +133,10 @@ export class SceneEntity {
 
   private resetIdleTimer(): void {
     if (this.idleTimeoutId) clearTimeout(this.idleTimeoutId)
-    this.idleTimeoutId = setTimeout(() => this.hint.startHintAnimation(), this.IDLE_TIME)
+    this.idleTimeoutId = setTimeout(() => {
+      this.hint.startHintAnimation()
+      if (this.idleTimeoutId) clearTimeout(this.idleTimeoutId)
+    }, this.IDLE_TIME)
   }
 }
 
