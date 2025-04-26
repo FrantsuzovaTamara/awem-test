@@ -42,8 +42,8 @@ export class SceneEntity {
     private readonly createHint: () => HintEntity,
   ) {
     this.resetIdleTimer()
-    window.onpointerdown = () => this.onUserInteraction()
-    window.onpointermove = () => this.onUserInteraction()
+    window.onpointerdown = (): void => this.onUserInteraction()
+    window.onpointermove = (): void => this.onUserInteraction()
 
     this.container = new Container()
 
@@ -106,6 +106,9 @@ export class SceneEntity {
 
   private startStageWithField(): void {
     this.bgMusic.play()
+    document.addEventListener('visibilitychange', () => {
+      document.hidden ? this.bgMusic.pause() : this.bgMusic.play()
+    })
     this.map.scaleChange(this.DURATION, () => this.nextButton.show())
     this.field.alphaChange(this.DURATION)
   }

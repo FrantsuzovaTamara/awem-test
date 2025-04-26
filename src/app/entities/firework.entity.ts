@@ -33,7 +33,7 @@ export class FireworkEntity {
       salutSound.volume = 0.5
       salutSound.loop = false
 
-      firework.onComplete = () => {
+      firework.onComplete = (): void => {
         if (this.currentNumberOfFireworks < this.MAX_NUMBER_OF_FIREWORKS) {
           requestAnimationFrame(frame)
         } else {
