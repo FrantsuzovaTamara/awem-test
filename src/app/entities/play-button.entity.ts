@@ -42,5 +42,7 @@ export class PlayButtonEntity {
     } else {
       window.open(this.ANDROID_URL, '_blank')
     }
+
+    window.playableGoToStore()
   }
 }
