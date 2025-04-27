@@ -7,12 +7,12 @@ export class ChipEntity {
   public y: number = 0
   public row: number = 0
   public column: number = 0
+  private koeff: number = 0
 
   constructor() {}
 
   public init({
     name,
-    position,
     container,
     row,
     column,
@@ -21,7 +21,6 @@ export class ChipEntity {
     cleanupDrag,
   }: {
     name: string
-    position: Position
     row: number
     column: number
     container: Container
@@ -34,10 +33,8 @@ export class ChipEntity {
 
     this.chip._anchor.set(0.5)
     this.chip.scale = 1.2
-    this.chip.position = position
+    this.koeff = this.chip.height / this.chip.width
 
-    this.x = position.x
-    this.y = position.y
     this.row = row
     this.column = column
 
@@ -66,5 +63,11 @@ export class ChipEntity {
   public unlock(): void {
     this.chip.eventMode = 'static'
     this.chip.cursor = 'pointer'
+  }
+
+  public onResize(width: number): void {
+    const padding = 5
+    this.chip.width = width - padding
+    this.chip.height = this.chip.width * this.koeff
   }
 }

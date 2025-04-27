@@ -1,12 +1,17 @@
-import {AnimatedSprite, Assets, Container, Texture} from 'pixi.js'
+import {AnimatedSprite, Assets, Container, Size, Texture} from 'pixi.js'
+import DeviceService from '../services/device.service'
+import {Position, ScreenAspect} from '../types'
+import {injected} from 'brandi'
+import {TOKENS} from '../di/di.tokens'
 
 export class HintEntity {
   private readonly NUMBER_OF_SLIDES = 25
 
   private readonly container: Container
   private readonly hint: AnimatedSprite
+  private readonly koeff: number
 
-  constructor() {
+  constructor(private readonly deviceService: DeviceService) {
     this.container = new Container()
 
     const textures = []
@@ -17,15 +22,15 @@ export class HintEntity {
     }
 
     this.hint = new AnimatedSprite(textures)
+    this.koeff = this.hint.height / this.hint.width
 
-    this.hint.x = window.innerWidth / 2
-    this.hint.y = window.innerHeight / 2
     this.hint.loop = false
-    this.hint.scale = 0.7
+    this.hint.scale = 0.6
     this.hint.alpha = 0
     this.hint.animationSpeed = 0.8
 
     this.container.addChild(this.hint)
+    this.deviceService.onResize(this.onResize)
   }
 
   public setOnCompleteAnimation(onStop: () => void): void {
@@ -33,6 +38,11 @@ export class HintEntity {
       this.stopHintAnimation()
       onStop()
     }
+  }
+
+  public updatePosition(getDataForUpdatePosition: () => {position: Position; size: Size}): void {
+    this.getDataForUpdatePosition = getDataForUpdatePosition
+    this.onResize()
   }
 
   public addToContainer(container: Container): void {
@@ -48,4 +58,26 @@ export class HintEntity {
     this.hint.currentFrame = 0
     this.hint.alpha = 0
   }
+
+  private getDataForUpdatePosition = (): {position: Position; size: Size} => {
+    return {position: {x: 0, y: 0}, size: {width: 0, height: 0}}
+  }
+
+  private readonly onResize = (): void => {
+    const padding = 50
+
+    const {size, position} = this.getDataForUpdatePosition()
+    this.container.x = position.x + size.width / 2 - padding / 2
+    this.container.y = position.y + size.height / 2 - padding
+
+    if (this.deviceService.currScreenAspect === ScreenAspect.Album) {
+      this.hint.width = this.deviceService.currWindowSize.width / 6
+      this.hint.height = this.hint.width * this.koeff
+    } else {
+      this.hint.height = this.deviceService.currWindowSize.height / 6
+      this.hint.width = this.hint.height / this.koeff
+    }
+  }
 }
+
+injected(HintEntity, TOKENS.deviceService)
