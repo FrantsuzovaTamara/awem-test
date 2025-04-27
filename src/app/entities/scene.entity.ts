@@ -2,11 +2,11 @@ import {injected} from 'brandi'
 import {MapEntity} from './map.entity'
 import {TOKENS} from '../di/di.tokens'
 import {Container} from 'pixi.js'
+import {CharacterEntity} from './character.entity'
 import {LogoEntity} from './logo.entity'
 import {PlayButtonEntity} from './play-button.entity'
 import {NextButtonEntity} from './next-button.entity'
 import {FieldEntity} from './field.entity'
-import {BuilderEntity} from './builder.entity'
 import {FireworkEntity} from './firework.entity'
 import {HintEntity} from './hint.entity'
 import music from '../../assets/sound/music.mp3'
@@ -22,13 +22,13 @@ export class SceneEntity {
   private readonly playButton: PlayButtonEntity
   private readonly nextButton: NextButtonEntity
   private readonly field: FieldEntity
-  private readonly builder: BuilderEntity
+  private readonly character: CharacterEntity
   private readonly fireworks: FireworkEntity
   private readonly hint: HintEntity
   private readonly bgMusic: HTMLAudioElement
   private readonly ovationSound: HTMLAudioElement
 
-  private stage: 'initial' | 'field' | 'builder' | 'fireworks' = 'initial'
+  private stage: 'initial' | 'field' | 'character' | 'fireworks' = 'initial'
   private idleTimeoutId: ReturnType<typeof setTimeout> | null = null
 
   constructor(
@@ -37,7 +37,7 @@ export class SceneEntity {
     private readonly createPlayButton: () => PlayButtonEntity,
     private readonly createNextButton: () => NextButtonEntity,
     private readonly createField: () => FieldEntity,
-    private readonly createBuilder: () => BuilderEntity,
+    private readonly createCharacter: () => CharacterEntity,
     private readonly createFireworks: () => FireworkEntity,
     private readonly createHint: () => HintEntity,
   ) {
@@ -64,8 +64,8 @@ export class SceneEntity {
     this.field = this.createField()
     this.field.addToContainer(this.container)
 
-    this.builder = this.createBuilder()
-    this.builder.addToContainer(this.container)
+    this.character = this.createCharacter()
+    this.character.addToContainer(this.container)
 
     this.fireworks = this.createFireworks()
     this.fireworks.addToContainer(this.container)
@@ -93,18 +93,20 @@ export class SceneEntity {
         this.stage = 'field'
         break
       case 'field':
-        this.startStageWithBuilder()
-        this.stage = 'builder'
+        this.startStageWithCharacter()
+        this.stage = 'character'
         break
-      case 'builder':
+      case 'character':
         this.startStageWithFireworks()
         this.stage = 'fireworks'
         window.playableFinished()
         break
       case 'fireworks':
+        this.character.startAnimation()
         this.fireworks.startFireworks(() => {
           this.nextButton.show()
           this.resetIdleTimer()
+          this.character.stopAnimation()
         })
         break
       default:
@@ -124,9 +126,9 @@ export class SceneEntity {
     this.field.alphaChange(this.DURATION)
   }
 
-  private startStageWithBuilder(): void {
+  private startStageWithCharacter(): void {
     this.ovationSound.play()
-    this.builder.show()
+    this.character.show()
     this.field.hide()
     setTimeout(() => {
       this.nextButton.show()
@@ -136,9 +138,12 @@ export class SceneEntity {
 
   private startStageWithFireworks(): void {
     this.map.scaleChange(this.DURATION, 'down', () => {})
+    this.character.scaleDown(this.DURATION)
+    this.character.startAnimation()
     this.fireworks.startFireworks(() => {
       this.nextButton.show()
       this.resetIdleTimer()
+      this.character.stopAnimation()
     })
   }
 
@@ -163,7 +168,7 @@ injected(
   TOKENS.playButtonFactory,
   TOKENS.nextButtonFactory,
   TOKENS.fieldFactory,
-  TOKENS.builderFactory,
+  TOKENS.characterFactory,
   TOKENS.fireworkFactory,
   TOKENS.hintFactory,
 )

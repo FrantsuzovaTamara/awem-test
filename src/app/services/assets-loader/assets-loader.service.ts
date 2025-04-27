@@ -1,9 +1,9 @@
 import {Assets} from 'pixi.js'
 import {AssetsObject, SpineAsset, Resource} from '../../types'
 
-import builderScrollImage from '../../../assets/builder_scroll/builder_scroll.png'
-import builderScrollAtlas from '../../../assets/builder_scroll/builder_scroll.atlas'
-import builderScrollJson from '../../../assets/builder_scroll/builder_scroll.json?url'
+import characterImage from '../../../assets/character/spine-char.png'
+import characterAtlas from '../../../assets/character/spine-char.atlas'
+import characterJson from '../../../assets/character/spine-char.json?url'
 
 import blueChip from '../../../assets/chip/ch_blue.png'
 import greenChip from '../../../assets/chip/ch_green.png'
@@ -101,9 +101,9 @@ export class AssetsLoaderService {
     return {
       spine: [
         {
-          image: {alias: 'builderScrollImage', src: builderScrollImage},
-          atlas: {alias: 'builderScrollAtlas', src: builderScrollAtlas},
-          json: {alias: 'builderScrollData', src: builderScrollJson},
+          image: {alias: 'characterImage', src: characterImage},
+          atlas: {alias: 'characterAtlas', src: characterAtlas},
+          json: {alias: 'characterData', src: characterJson},
         },
       ],
       image: [
