@@ -10,7 +10,7 @@ import {PlayButtonEntity} from '../entities/play-button.entity'
 import {NextButtonEntity} from '../entities/next-button.entity'
 import {FieldEntity} from '../entities/field.entity'
 import {ChipEntity} from '../entities/chip.entity'
-import {BuilderEntity} from '../entities/builder.entity'
+import {CharacterEntity} from '../entities/character.entity'
 import {FireworkEntity} from '../entities/firework.entity'
 import {HintEntity} from '../entities/hint.entity'
 
@@ -32,7 +32,7 @@ export function createDiRootContainer($root: HTMLElement): Container {
   container.bind(TOKENS.fieldFactory).toFactory(FieldEntity)
   container.bind(TOKENS.chipFactory).toFactory(ChipEntity)
 
-  container.bind(TOKENS.builderFactory).toFactory(BuilderEntity)
+  container.bind(TOKENS.characterFactory).toFactory(CharacterEntity)
   container.bind(TOKENS.fireworkFactory).toFactory(FireworkEntity)
   container.bind(TOKENS.hintFactory).toFactory(HintEntity)
 
