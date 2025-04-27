@@ -2,8 +2,9 @@ import {Assets, Container, Sprite} from 'pixi.js'
 import {ChipEntity} from './chip.entity'
 import {injected} from 'brandi'
 import {TOKENS} from '../di/di.tokens'
-import {Position} from '../types'
+import {Position, ScreenAspect} from '../types'
 import mistake from '../../assets/sound/mistake.mp3'
+import DeviceService from '../services/device.service'
 
 export class FieldEntity {
   private readonly chipTypes = [
@@ -25,53 +26,34 @@ export class FieldEntity {
 
   private activeChip: ChipEntity | undefined = undefined
   private startDragPosition: Position | undefined = undefined
+  private readonly koeff: number
 
-  constructor(private readonly createChip: () => ChipEntity) {
+  constructor(
+    private readonly createChip: () => ChipEntity,
+    private readonly deviceService: DeviceService,
+  ) {
     this.container = new Container()
     this.chipsContainer = new Container()
 
     const texture = Assets.get('field')
     this.field = new Sprite(texture)
+    this.koeff = this.field.height / this.field.width
 
     this.field._anchor.set(0.5)
-    this.field.y = window.innerHeight / 2
-    this.field.x = window.innerWidth / 2
     this.field.alpha = 0
     this.field.scale = 1.5
     this.container.addChild(this.field)
 
-    const x = window.innerWidth / 2
-    const y = window.innerHeight / 2
-
-    this.chipTypes.forEach((name, i) => {
-      const chip = this.createChip()
-
-      const row = Math.floor(i / 3)
-      const column = i % 3
-      const position = this.getChipPosition(x, y, row, column)
-
-      chip.init({
-        name,
-        row,
-        column,
-        position,
-        container: this.chipsContainer,
-        onPointerDown: (e: PointerEvent) => {
-          this.activeChip = chip
-          this.startDragPosition = {x: e.clientX, y: e.clientY}
-        },
-        onPointerMove: this.onPointerMove,
-        cleanupDrag: this.cleanupDrag,
-      })
-
-      this.chips.push(chip)
-    })
+    this.createChips()
     this.chipsContainer.alpha = 0
     this.container.addChild(this.chipsContainer)
 
     this.sound = new Audio(mistake)
     this.sound.volume = 0.5
     this.sound.loop = false
+
+    this.onResize()
+    this.deviceService.onResize(this.onResize)
   }
 
   public addToContainer(container: Container): void {
@@ -100,6 +82,29 @@ export class FieldEntity {
     }
 
     requestAnimationFrame(frame)
+  }
+
+  private readonly onResize = (): void => {
+    const padding = 40
+    this.field.x = this.deviceService.centralWindowPoint.x
+    this.field.y = this.deviceService.centralWindowPoint.y
+
+    if (this.deviceService.currScreenAspect === ScreenAspect.Album) {
+      this.field.width = this.deviceService.currWindowSize.width / 2 - padding * 2
+      this.field.height = this.field.width * this.koeff
+    } else {
+      this.field.height = this.deviceService.currWindowSize.height / 2 - padding * 2
+      this.field.width = this.field.height / this.koeff
+    }
+
+    this.chips.forEach(chip => {
+      const size = this.field.width / 7
+      const newPosition = this.getChipPosition(0, 0, chip.row, chip.column, size)
+      chip.setPosition(newPosition)
+      chip.onResize(size)
+    })
+    this.chipsContainer.x = this.deviceService.centralWindowPoint.x
+    this.chipsContainer.y = this.deviceService.centralWindowPoint.y
   }
 
   private readonly cleanupDrag = (): void => {
@@ -209,27 +214,50 @@ export class FieldEntity {
     })
   }
 
-  private getChipPosition(x: number, y: number, row: number, column: number): Position {
-    const squareSide = 75
+  private createChips(): void {
+    this.chipTypes.forEach((name, i) => {
+      const chip = this.createChip()
+
+      const row = Math.floor(i / 3)
+      const column = i % 3
+
+      chip.init({
+        name,
+        row,
+        column,
+        container: this.chipsContainer,
+        onPointerDown: (e: PointerEvent) => {
+          this.activeChip = chip
+          this.startDragPosition = {x: e.clientX, y: e.clientY}
+        },
+        onPointerMove: this.onPointerMove,
+        cleanupDrag: this.cleanupDrag,
+      })
+
+      this.chips.push(chip)
+    })
+  }
+
+  private getChipPosition(x: number, y: number, row: number, column: number, size: number): Position {
     switch (row) {
       case 0:
-        y -= squareSide
+        y -= size
         break
       case 2:
-        y += squareSide
+        y += size
         break
     }
 
     switch (column) {
       case 0:
-        x -= squareSide
+        x -= size
         break
       case 2:
-        x += squareSide
+        x += size
         break
     }
     return {x, y}
   }
 }
 
-injected(FieldEntity, TOKENS.chipFactory)
+injected(FieldEntity, TOKENS.chipFactory, TOKENS.deviceService)

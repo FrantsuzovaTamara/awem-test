@@ -55,6 +55,7 @@ export class SceneEntity {
 
     this.playButton = this.createPlayButton()
     this.playButton.addToContainer(this.container)
+    this.playButton.updatePosition(this.logo.getSizeAndPosition)
 
     this.nextButton = this.createNextButton()
     this.nextButton.addToContainer(this.container)
@@ -71,6 +72,7 @@ export class SceneEntity {
 
     this.hint = this.createHint()
     this.hint.addToContainer(this.container)
+    this.hint.updatePosition(this.nextButton.getSizeAndPosition)
     this.hint.setOnCompleteAnimation(() => this.resetIdleTimer())
 
     this.bgMusic = new Audio(music)
@@ -115,7 +117,7 @@ export class SceneEntity {
     document.addEventListener('visibilitychange', () => {
       document.hidden ? this.bgMusic.pause() : this.bgMusic.play()
     })
-    this.map.scaleChange(this.DURATION, () => {
+    this.map.scaleChange(this.DURATION, 'up', () => {
       this.nextButton.show()
       this.resetIdleTimer()
     })
@@ -133,7 +135,7 @@ export class SceneEntity {
   }
 
   private startStageWithFireworks(): void {
-    this.map.scaleChange(this.DURATION, () => {})
+    this.map.scaleChange(this.DURATION, 'down', () => {})
     this.fireworks.startFireworks(() => {
       this.nextButton.show()
       this.resetIdleTimer()

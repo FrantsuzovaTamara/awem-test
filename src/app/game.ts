@@ -18,17 +18,19 @@ export class Game {
   }
 
   public async start(): Promise<void> {
+    this.deviceService.init()
+
     await this.app.init({
       antialias: true,
       resolution: this.deviceService.getDevicePixelRatio(),
       autoDensity: true,
       background: 0x000000,
-      width: this.deviceService.getWindowWidth(),
-      height: this.deviceService.getWindowHeight(),
+      width: this.deviceService.currWindowSize.width,
+      height: this.deviceService.currWindowSize.height,
     })
-    //@ts-ignore
-    globalThis.__PIXI_APP__ = this.app
     this.$root.appendChild(this.app.canvas)
+
+    this.deviceService.onResize(this.resizeCanvas)
 
     await this.assetsLoaderService
       .loadAssets()
@@ -39,6 +41,13 @@ export class Game {
       .then(() => {
         window.playableLoaded()
       })
+  }
+
+  private readonly resizeCanvas = (): void => {
+    const newCanvasWidth = this.deviceService.currWindowSize.width
+    const newCanvasHeight = this.deviceService.currWindowSize.height
+
+    this.app.renderer.resize(newCanvasWidth, newCanvasHeight)
   }
 }
 

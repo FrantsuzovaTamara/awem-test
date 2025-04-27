@@ -1,6 +1,9 @@
 import {AnimatedSprite, Assets, Container, Texture, TextureSource} from 'pixi.js'
 import {Position} from '../types'
 import salut from '../../assets/sound/salut.mp3'
+import DeviceService from '../services/device.service'
+import {injected} from 'brandi'
+import {TOKENS} from '../di/di.tokens'
 
 export class FireworkEntity {
   private readonly MAX_NUMBER_OF_FIREWORKS = 5
@@ -11,7 +14,7 @@ export class FireworkEntity {
   private readonly container: Container
   private readonly textures: Texture<TextureSource<any>>[] = []
 
-  constructor() {
+  constructor(private readonly deviceService: DeviceService) {
     this.container = new Container()
 
     for (let i = 0; i < this.NUMBER_OF_SLIDES; i++) {
@@ -68,8 +71,10 @@ export class FireworkEntity {
     const half = max / 1.5
     const randomX = Math.random() * max
     const randomY = Math.random() * max
-    const x = window.innerWidth / 2 + (randomX > half ? randomX - half : -randomX)
-    const y = window.innerHeight / 2 + (randomY > half ? randomY - half : -randomY)
+    const x = this.deviceService.centralWindowPoint.x + (randomX > half ? randomX - half : -randomX)
+    const y = this.deviceService.centralWindowPoint.y + (randomY > half ? randomY - half : -randomY)
     return {x, y}
   }
 }
+
+injected(FireworkEntity, TOKENS.deviceService)
