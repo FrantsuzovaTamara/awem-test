@@ -1,7 +1,7 @@
 import {Container} from 'brandi'
 import {Game} from '../game'
 import {TOKENS} from './di.tokens'
-import {AssetsLoaderService} from '../services/assets-loader/assets-loader.service'
+import {ImageLoaderService} from '../services/images-loader.service'
 import DeviceService from '../services/device.service'
 import {SceneEntity} from '../entities/scene.entity'
 import {MapEntity} from '../entities/map.entity'
@@ -21,7 +21,7 @@ export function createDiRootContainer($root: HTMLElement): Container {
   container.bind(TOKENS.game).toInstance(Game).inSingletonScope()
 
   container.bind(TOKENS.deviceService).toInstance(DeviceService).inSingletonScope()
-  container.bind(TOKENS.assetsLoaderService).toInstance(AssetsLoaderService).inSingletonScope()
+  container.bind(TOKENS.imageLoaderService).toInstance(ImageLoaderService).inSingletonScope()
 
   container.bind(TOKENS.sceneFactory).toFactory(SceneEntity)
   container.bind(TOKENS.mapFactory).toFactory(MapEntity)

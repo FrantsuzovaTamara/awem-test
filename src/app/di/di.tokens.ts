@@ -1,7 +1,7 @@
 import {Factory, token} from 'brandi'
 import {Game} from '../game'
 import DeviceService from '../services/device.service'
-import {AssetsLoaderService} from '../services/assets-loader/assets-loader.service'
+import {ImageLoaderService} from '../services/images-loader.service'
 import {SceneEntity} from '../entities/scene.entity'
 import {ChipEntity} from '../entities/chip.entity'
 import {MapEntity} from '../entities/map.entity'
@@ -18,7 +18,7 @@ export const TOKENS = {
   root: token<HTMLElement>('root'),
 
   deviceService: token<DeviceService>('deviceSevice'),
-  assetsLoaderService: token<AssetsLoaderService>('assetsLoaderService'),
+  imageLoaderService: token<ImageLoaderService>('imageLoaderService'),
 
   sceneFactory: token<Factory<SceneEntity>>('sceneFactory'),
   mapFactory: token<Factory<MapEntity>>('mapFactory'),
