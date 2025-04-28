@@ -2,7 +2,7 @@ import {Application} from 'pixi.js'
 import DeviceService from './services/device.service'
 import {injected} from 'brandi'
 import {TOKENS} from './di/di.tokens'
-import {AssetsLoaderService} from './services/assets-loader/assets-loader.service'
+import {ImageLoaderService} from './services/images-loader.service'
 import {SceneEntity} from './entities/scene.entity'
 
 export class Game {
@@ -11,7 +11,7 @@ export class Game {
   constructor(
     private readonly $root: HTMLElement,
     private readonly deviceService: DeviceService,
-    private readonly assetsLoaderService: AssetsLoaderService,
+    private readonly imageLoaderService: ImageLoaderService,
     private readonly createScene: () => SceneEntity,
   ) {
     this.app = new Application()
@@ -32,8 +32,8 @@ export class Game {
 
     this.deviceService.onResize(this.resizeCanvas)
 
-    await this.assetsLoaderService
-      .loadAssets()
+    await this.imageLoaderService
+      .loadImages()
       .then(() => {
         const scene = this.createScene()
         this.app.stage.addChild(scene.container)
@@ -51,4 +51,4 @@ export class Game {
   }
 }
 
-injected(Game, TOKENS.root, TOKENS.deviceService, TOKENS.assetsLoaderService, TOKENS.sceneFactory)
+injected(Game, TOKENS.root, TOKENS.deviceService, TOKENS.imageLoaderService, TOKENS.sceneFactory)

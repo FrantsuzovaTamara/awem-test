@@ -1,6 +1,13 @@
-import {Skin, Spine} from '@esotericsoftware/spine-pixi-v8'
+import {
+  AtlasAttachmentLoader,
+  SkeletonJson,
+  Skin,
+  Spine,
+  SpineTexture,
+  TextureAtlas,
+} from '@esotericsoftware/spine-pixi-v8'
 import {injected} from 'brandi'
-import {Container} from 'pixi.js'
+import {Assets, Container, Texture} from 'pixi.js'
 import {TOKENS} from '../di/di.tokens'
 import DeviceService from '../services/device.service'
 import {ScreenAspect} from '../types'
@@ -12,15 +19,29 @@ export class CharacterEntity {
   private currentScale: number = 0
 
   constructor(private readonly deviceService: DeviceService) {
-    this.character = Spine.from({skeleton: 'characterData', atlas: 'characterAtlas'})
+    const atlasText = require('../../assets/character/spine-char.atlas')
+    const jsonText = require('../../assets/character/spine-char.json')
 
-    const newSkinName = 'newSkin'
-    const skinName = 'full-skins/girl-blue-cape'
-    const newSkin = new Skin('full-skins/girl-blue-cape')
-    const skin = this.character.skeleton.data.skins.find(s => s.name === skinName)
-    if (!skin) {
-      throw new Error(`Скин "${skinName}" не найден для нового скина "${newSkinName}"`)
+    const pixiTexture = Assets.get('characterImage') as Texture
+
+    const spineTexture = SpineTexture.from(pixiTexture.source)
+
+    const atlas = new TextureAtlas(atlasText)
+    for (const page of atlas.pages) {
+      page.setTexture(spineTexture)
     }
+
+    const attachmentLoader = new AtlasAttachmentLoader(atlas)
+    const skeletonJson = new SkeletonJson(attachmentLoader)
+    skeletonJson.scale = 0.5
+
+    const skeletonData = skeletonJson.readSkeletonData(JSON.parse(jsonText))
+    this.character = new Spine(skeletonData)
+
+    const skinName = 'full-skins/girl-blue-cape'
+    const newSkin = new Skin('newSkin')
+    const skin = this.character.skeleton.data.skins.find(s => s.name === skinName)
+    if (!skin) throw new Error(`Скин "${skinName}" не найден`)
     newSkin.addSkin(skin)
     this.character.skeleton.setSkin(newSkin)
 
